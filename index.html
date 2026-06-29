@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sotto il cofano — Come funziona davvero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blu:#123E90;--blu-700:#0E3273;--blu-300:#5C7FC4;--blu-100:#DCE6F8;--blu-050:#EEF3FC;
+  --ambra:#C77A0A;--ambra-bg:#FDF4E6;--verde:#1B7A4B;--verde-bg:#E8F4ED;
+  --ink:#15233F;--ink-soft:#5A687F;--line:#E3E8F2;--bg:#F5F7FB;--card:#FFFFFF;
+  --radius:18px;--radius-sm:12px;--shadow:0 1px 2px rgba(18,62,144,.06),0 8px 24px rgba(18,62,144,.07);--maxw:1320px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--ink);
+  -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+:focus-visible{outline:3px solid var(--blu-300);outline-offset:2px;border-radius:6px}
+h1,h2,h3,.dspl{font-family:'Bricolage Grotesque',sans-serif}
+
+/* ====== HEADER ====== */
+.topbar{background:var(--card);border-bottom:1px solid var(--line);flex-shrink:0}
+.topbar-inner{max-width:var(--maxw);margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:11px;flex-shrink:0}
+.brand-mark{width:38px;height:38px;border-radius:11px;background:var(--blu);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-txt h1{font-size:1.02rem;font-weight:800;line-height:1;letter-spacing:-.01em}
+.brand-txt p{font-size:.72rem;color:var(--ink-soft);margin-top:3px;font-weight:500}
+.stations{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
+.station{display:flex;align-items:center;gap:9px;padding:7px 13px 7px 8px;border-radius:999px;
+  border:1.5px solid var(--line);background:var(--card);transition:border-color .18s,background .18s;max-width:215px}
+.station:hover{border-color:var(--blu-300)}
+.station.active{border-color:var(--blu);background:var(--blu-050)}
+.station.done .st-num{background:var(--verde)}
+.st-num{width:25px;height:25px;border-radius:50%;flex-shrink:0;background:var(--blu-300);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem}
+.station.active .st-num{background:var(--blu)}
+.st-num svg{display:none}.station.done .st-num svg{display:block}.station.done .st-num span{display:none}
+.st-meta{text-align:left;line-height:1.15;min-width:0}
+.st-meta .k{font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:600}
+.st-meta .t{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.station.active .st-meta .t{color:var(--blu)}
+
+/* ====== STAGE ====== */
+.stage{flex:1;display:flex;gap:18px;max-width:var(--maxw);width:100%;margin:0 auto;padding:18px 20px;min-height:0}
+.vcol{flex:1 1 55%;display:flex;flex-direction:column;min-width:0;gap:14px}
+.acol{flex:1 1 45%;display:flex;flex-direction:column;min-width:0;background:var(--card);
+  border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+
+/* anticipa */
+.hook{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;flex-shrink:0;
+  border-left:4px solid var(--ambra)}
+.hook .lab{font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ambra);display:flex;align-items:center;gap:6px}
+.hook .mis{font-size:1.04rem;font-weight:600;line-height:1.4;margin:7px 0 4px}
+.hook .ask{font-size:.86rem;color:var(--ink-soft);line-height:1.45}
+
+/* video */
+.vframe{background:#0A1428;border-radius:var(--radius);overflow:hidden;position:relative;box-shadow:var(--shadow);flex-shrink:0}
+.vframe video{display:block;width:100%;aspect-ratio:16/9;background:#0A1428;object-fit:contain}
+.vcover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  background:radial-gradient(120% 120% at 50% 30%,#143064 0%,#0A1428 70%);cursor:pointer;text-align:center;padding:24px}
+.vcover.hide{display:none}
+.vcover .big-play{width:72px;height:72px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);transition:transform .15s}
+.vcover:hover .big-play{transform:scale(1.06)}
+.vcover .ep-k{color:var(--blu-300);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.vcover .ep-t{color:#fff;font-weight:700;font-size:1.45rem;max-width:30ch;line-height:1.15}
+.vbar{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--card);border-radius:var(--radius-sm);box-shadow:var(--shadow);flex-shrink:0}
+.pp{width:38px;height:38px;border-radius:50%;background:var(--blu);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.pp:hover{background:var(--blu-700)}
+.seek{flex:1;height:8px;border-radius:99px;background:var(--blu-100);position:relative;cursor:pointer}
+.seek-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--blu);border-radius:99px}
+.seek-knob{position:absolute;top:50%;width:15px;height:15px;border-radius:50%;background:#fff;border:3px solid var(--blu);transform:translate(-50%,-50%);left:0;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tcode{font-variant-numeric:tabular-nums;font-size:.8rem;color:var(--ink-soft);font-weight:600;flex-shrink:0;min-width:84px;text-align:right}
+
+/* pannello attività */
+.tabs{display:flex;border-bottom:1px solid var(--line);flex-shrink:0}
+.tab{flex:1;padding:13px 6px;font-size:.82rem;font-weight:600;color:var(--ink-soft);position:relative;transition:color .15s}
+.tab:hover{color:var(--blu)}
+.tab.on{color:var(--blu)}
+.tab.on::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:3px;background:var(--blu);border-radius:3px 3px 0 0}
+.tab .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--verde);margin-left:5px;opacity:0;transition:opacity .2s}
+.tab.complete .dot{opacity:1}
+.panes{flex:1;overflow-y:auto;padding:20px}
+.panes::-webkit-scrollbar{width:8px}.panes::-webkit-scrollbar-thumb{background:var(--blu-100);border-radius:99px}
+.pane{display:none}.pane.on{display:block}
+
+/* verifica */
+.q{margin-bottom:20px}
+.q:last-child{margin-bottom:6px}
+.q-h{display:flex;gap:9px;font-weight:600;font-size:.95rem;line-height:1.4;margin-bottom:10px}
+.q-n{flex-shrink:0;width:23px;height:23px;border-radius:7px;background:var(--blu-050);color:var(--blu);
+  display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700}
+.opt{display:block;width:100%;text-align:left;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;
+  font-size:.9rem;margin-bottom:8px;transition:border-color .15s,background .15s;line-height:1.35}
+.opt:hover{border-color:var(--blu-300)}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--verde);background:var(--verde-bg)}
+.opt.near{border-color:var(--ambra);background:var(--ambra-bg)}
+.fb{display:none;margin-top:2px;padding:11px 13px;border-radius:11px;font-size:.86rem;line-height:1.45}
+.fb.show{display:block}
+.fb.ok{background:var(--verde-bg);color:#0E4F30}
+.fb.near{background:var(--ambra-bg);color:#7A4A07}
+.fb b{font-weight:700}
+
+/* parole */
+.term-card{border:1.5px solid var(--line);border-radius:12px;margin-bottom:9px;overflow:hidden}
+.term-head{width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;text-align:left;font-weight:600;font-size:.92rem;transition:background .15s}
+.term-head:hover{background:var(--blu-050)}
+.term-head .chev{margin-left:auto;transition:transform .2s;flex-shrink:0}
+.term-card.open .term-head .chev{transform:rotate(90deg)}
+.term-card.open .term-head{color:var(--blu)}
+.term-ico{width:30px;height:30px;border-radius:8px;background:var(--blu-050);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.term-def{display:none;padding:0 14px 14px 56px;font-size:.88rem;line-height:1.5;color:var(--ink-soft)}
+.term-card.open .term-def{display:block}
+
+/* rifletti */
+.reflect-q{background:linear-gradient(135deg,var(--blu) 0%,var(--blu-700) 100%);color:#fff;border-radius:var(--radius);padding:18px 20px;margin-bottom:16px}
+.reflect-q .rk{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blu-300);font-weight:700}
+.reflect-q .rt{font-size:1.02rem;line-height:1.5;margin-top:6px;font-weight:500}
+.reflect-note{font-size:.82rem;color:var(--ink-soft);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+textarea{width:100%;min-height:120px;border:1.5px solid var(--line);border-radius:12px;padding:13px;font-family:inherit;
+  font-size:.92rem;line-height:1.5;color:var(--ink);resize:vertical}
+textarea:focus{outline:none;border-color:var(--blu-300)}
+.classbox{margin-top:14px;background:var(--blu-050);border-radius:12px;padding:13px 15px;font-size:.86rem;line-height:1.5}
+.classbox .ck{font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blu);display:flex;align-items:center;gap:6px;margin-bottom:5px}
+
+.donebar{padding:14px 20px;border-top:1px solid var(--line);flex-shrink:0;display:flex;align-items:center;gap:12px}
+.donebar .prog{font-size:.78rem;color:var(--ink-soft);font-weight:600}
+.donebar button{margin-left:auto;background:var(--blu);color:#fff;padding:10px 18px;border-radius:11px;font-weight:600;font-size:.88rem;
+  display:flex;align-items:center;gap:8px;transition:background .15s}
+.donebar button:hover{background:var(--blu-700)}
+
+/* schermata finale */
+.final{position:fixed;inset:0;background:var(--bg);z-index:70;display:none;flex-direction:column;overflow:auto}
+.final.show{display:flex}
+.final-inner{max-width:840px;margin:0 auto;padding:40px 24px 60px;width:100%}
+.final h2{font-size:1.7rem;font-weight:800;letter-spacing:-.01em}
+.final .sub{color:var(--ink-soft);margin:8px 0 28px;font-size:.96rem;line-height:1.5}
+.log{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:14px}
+.log .lk{font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blu)}
+.log h3{font-size:1.05rem;font-weight:700;margin:3px 0 9px}
+.log .lq{font-size:.9rem;color:var(--ink-soft);line-height:1.5;font-style:italic;margin-bottom:8px}
+.log .la{font-size:.92rem;line-height:1.5;white-space:pre-wrap;background:var(--blu-050);border-radius:10px;padding:11px 13px;min-height:20px}
+.log .la:empty::before{content:"— non hai scritto note per questa tappa —";color:var(--ink-soft);font-style:italic}
+.final-actions{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+.final-actions button{padding:11px 18px;border-radius:11px;font-weight:600;font-size:.9rem;display:flex;align-items:center;gap:8px}
+.btn-pri{background:var(--blu);color:#fff}.btn-pri:hover{background:var(--blu-700)}
+.btn-sec{background:var(--card);border:1.5px solid var(--line);color:var(--ink)}.btn-sec:hover{border-color:var(--blu-300)}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;
+  padding:11px 18px;border-radius:11px;font-size:.84rem;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:90;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:980px){
+  body{overflow:auto;height:auto;min-height:100dvh}
+  .stage{flex-direction:column;padding:14px;height:auto}
+  .vcol,.acol{flex:none;width:100%}
+  .acol{min-height:62vh}
+  .stations{order:3;width:100%;justify-content:flex-start;overflow-x:auto;padding-bottom:2px}
+  .topbar-inner{flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;scroll-behavior:auto!important;transition-duration:.05s!important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 8l-2 4 2 4M19 8l2 4-2 4M14 5l-4 14" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="brand-txt"><h1>Sotto il cofano</h1><p>Come funziona davvero</p></div>
+    </div>
+    <nav class="stations" id="stations" aria-label="Stazioni del percorso"></nav>
+  </div>
+</header>
+
+<main class="stage">
+  <section class="vcol">
+    <div class="hook">
+      <div class="lab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M9.2 9.3a2.8 2.8 0 1 1 3.6 2.7c-.6.2-.8.6-.8 1.2v.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.6" r="1" fill="currentColor"/></svg> Prima di guardare</div>
+      <div class="mis" id="hookMis">—</div>
+      <div class="ask" id="hookAsk">—</div>
+    </div>
+
+    <div class="vframe">
+      <video id="vid" playsinline webkit-playsinline preload="metadata"></video>
+      <div class="vcover" id="vcover">
+        <div class="ep-k" id="covK">Stazione 1</div>
+        <div class="big-play"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5z" fill="#123E90"/></svg></div>
+        <div class="ep-t" id="covT">—</div>
+      </div>
+    </div>
+
+    <div class="vbar">
+      <button class="pp" id="pp" aria-label="Play o pausa"><svg id="ppIco" width="18" height="18" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5z" fill="#fff"/></svg></button>
+      <div class="seek" id="seek" role="slider" aria-label="Avanzamento video" tabindex="0">
+        <div class="seek-fill" id="seekFill"></div><div class="seek-knob" id="seekKnob"></div>
+      </div>
+      <div class="tcode"><span id="tNow">0:00</span> / <span id="tDur">0:00</span></div>
+    </div>
+  </section>
+
+  <section class="acol">
+    <div class="tabs">
+      <button class="tab on" data-p="verifica">Verifica<span class="dot" id="dotV"></span></button>
+      <button class="tab" data-p="parole">Parole chiave</button>
+      <button class="tab" data-p="rifletti">Rifletti<span class="dot" id="dotR"></span></button>
+    </div>
+    <div class="panes">
+      <div class="pane on" data-p="verifica" id="paneVerifica"></div>
+      <div class="pane" data-p="parole" id="paneParole"></div>
+      <div class="pane" data-p="rifletti" id="paneRifletti"></div>
+    </div>
+    <div class="donebar">
+      <span class="prog" id="prog">0 / 4 stazioni</span>
+      <button id="doneBtn">Stazione completata <svg width="16" height="16" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </section>
+</main>
+
+<!-- FINALE -->
+<div class="final" id="final">
+  <div class="final-inner">
+    <h2>Il tuo quaderno di bordo</h2>
+    <p class="sub">Hai attraversato le quattro stazioni. Qui sotto trovi le domande di riflessione e ciò che hai annotato: portalo in classe, è da lì che parte la discussione.</p>
+    <div id="logs"></div>
+    <div class="final-actions">
+      <button class="btn-pri" id="copyLog"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="8" y="8" width="12" height="13" rx="2" stroke="#fff" stroke-width="1.8"/><path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2" stroke="#fff" stroke-width="1.8"/></svg> Copia il quaderno</button>
+      <button class="btn-sec" id="restart">Ricomincia il percorso</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =======================================================================
+   GLOSSARIO
+   ======================================================================= */
+const GLOSS={
+  g_indice:{t:'Indice',d:`L'archivio già pronto di pagine web che il motore consulta. Come l'indice di un libro: non rilegge tutto, controlla l'elenco.`},
+  g_crawler:{t:'Crawler',d:`Programma automatico (detto anche "ragno") che visita le pagine saltando di link in link e ne copia il contenuto per l'indice.`},
+  g_query:{t:'Query',d:`La richiesta che scrivi nel motore. Le tue parole diventano una domanda da confrontare con l'indice.`},
+  g_algoritmo:{t:'Algoritmo',d:`Una sequenza precisa di regole. Il motore lo usa per decidere quali risultati mostrare e in che ordine.`},
+  g_ranking:{t:'Ranking',d:`L'ordine dei risultati. Dipende dalle parole, ma anche da quanti siti affidabili rimandano a quella pagina.`},
+  g_server:{t:'Server',d:`Computer potenti, sempre accesi in grandi capannoni, dove vivono l'indice e i servizi del motore.`},
+  g_datacenter:{t:'Data center',d:`Edificio pieno di server dove avvengono i calcoli dell'IA. Consuma energia per lavorare e altra per raffreddarsi.`},
+  g_gpu:{t:'GPU',d:`Chip specializzato in moltissimi calcoli contemporanei. È il "muscolo" che fa funzionare l'IA, e scalda molto.`},
+  g_raffreddamento:{t:'Raffreddamento',d:`Sistema (aria o acqua) che impedisce ai chip di surriscaldarsi. Può consumare grandi quantità d'acqua.`},
+  g_addestramento:{t:'Addestramento',d:`La fase in cui il modello "impara" da enormi quantità di dati. Dura a lungo e consuma moltissima energia.`},
+  g_inferenza:{t:'Inferenza',d:`La fase d'uso: ogni volta che fai una domanda, il modello calcola la risposta. Poco a domanda, ma le domande sono miliardi.`},
+  g_kwh:{t:'Kilowattora (kWh)',d:`Unità di energia, la stessa della bolletta di casa. Serve a misurare quanto consuma un'attività.`},
+  g_satellite:{t:'Satellite',d:`Apparecchio che orbita attorno alla Terra. Per il GPS trasmette di continuo un segnale con l'ora esatta.`},
+  g_ricevitore:{t:'Ricevitore',d:`Il tuo telefono. Non trasmette la tua posizione: ascolta i satelliti e la calcola da solo.`},
+  g_segnale:{t:'Segnale',d:`Messaggio radio inviato dal satellite. Contiene l'istante preciso in cui è partito.`},
+  g_trilaterazione:{t:'Trilaterazione',d:`Metodo per trovare un punto incrociando le distanze da più satelliti. Con tre o quattro resta un solo punto: tu.`},
+  g_orologio:{t:'Orologio atomico',d:`L'orologio più preciso che esista, a bordo dei satelliti: meno di un secondo d'errore in milioni di anni.`},
+  g_costellazione:{t:'Costellazione',d:`L'insieme dei satelliti del sistema di posizionamento che lavorano insieme coprendo tutto il pianeta.`},
+  g_stella:{t:'Stella',d:`Enorme sfera di gas che produce luce ed energia. Il Sole è la nostra stella.`},
+  g_gravita:{t:'Gravità',d:`Forza che attira gli oggetti tra loro. La gravità del Sole tiene i pianeti agganciati alle orbite.`},
+  g_orbita:{t:'Orbita',d:`Il percorso curvo che un pianeta segue intorno al Sole, senza cadere né scappare via.`},
+  g_roccioso:{t:'Pianeta roccioso',d:`Pianeta piccolo e solido, vicino al Sole: Mercurio, Venere, la Terra e Marte.`},
+  g_gassoso:{t:'Gigante gassoso',d:`Pianeta enorme fatto soprattutto di gas, lontano dal Sole: Giove e Saturno.`},
+  g_ua:{t:'Unità astronomica',d:`Il "righello" dello spazio: la distanza media Terra-Sole. Misura distanze enormi senza cifre infinite.`},
+};
+
+/* =======================================================================
+   PERCORSO — 4 stazioni
+   NB: le risposte ai quiz sono sui FONDAMENTALI del tema (robuste a
+   qualsiasi video corretto). Verificale comunque sui filmati reali:
+   sono tutte editabili qui sotto.
+   ======================================================================= */
+const TAPPE=[
+  {
+    id:'google', num:'Stazione 1', titolo:'Come funziona Google',
+    src:'https://dl.dropboxusercontent.com/scl/fi/i5mq4b985vmom8im0j9kz/google.mp4?rlkey=n1uva4tolxlix0o6p6hty0juz&raw=1',
+    fb:'https://www.dropbox.com/scl/fi/i5mq4b985vmom8im0j9kz/google.mp4?rlkey=n1uva4tolxlix0o6p6hty0juz&dl=1',
+    hook:{mis:`«Quando cerco qualcosa, Google legge tutta internet in quel momento.»`,
+          ask:`Tieni a mente questa frase mentre guardi: alla fine saprai dire se è vera o falsa, e perché.`},
+    quiz:[
+      {q:`Quando scrivi una ricerca, Google consulta...`,
+       opts:[`tutto il web in tempo reale, pagina per pagina`,`un indice di pagine preparato in anticipo`,`solo i siti che hai già visitato tu`],
+       correct:1, why:`Google non gira il web mentre aspetti: consulta il suo <b>indice</b>, costruito prima da programmi che esplorano le pagine.`},
+      {q:`I programmi che esplorano e copiano le pagine per costruire l'indice si chiamano...`,
+       opts:[`crawler (o "ragni")`,`server`,`query`],
+       correct:0, why:`I <b>crawler</b> saltano di link in link e copiano cosa trovano. Il server è dove tutto è conservato; la query è la tua domanda.`},
+      {q:`Perché una pagina finisce tra i primi risultati?`,
+       opts:[`perché è la più recente`,`perché l'algoritmo la giudica pertinente e autorevole`,`perché contiene più parole delle altre`],
+       correct:1, why:`Conta la pertinenza, ma anche quanti siti affidabili la collegano. È il lavoro dell'<b>algoritmo</b> di ranking.`},
+    ],
+    gloss:['g_indice','g_crawler','g_query','g_algoritmo','g_ranking','g_server'],
+    reflect:`Il primo risultato è la risposta migliore, o solo la più "spinta" in alto? Come decidi se fidarti di una fonte?`,
+    classnote:`Spunto di classe: cercate tutti la stessa cosa con parole diverse e confrontate le prime tre risposte. Cosa cambia? Chi decide cosa vedete?`
+  },
+  {
+    id:'ia', num:'Stazione 2', titolo:'Quanto consuma l\u2019IA',
+    src:'https://dl.dropboxusercontent.com/scl/fi/86ek9h7g61cbbvla9d0u0/ai_consumo.mp4?rlkey=my9ry8m2yiifzqb2mhj1mjii0&raw=1',
+    fb:'https://www.dropbox.com/scl/fi/86ek9h7g61cbbvla9d0u0/ai_consumo.mp4?rlkey=my9ry8m2yiifzqb2mhj1mjii0&dl=1',
+    hook:{mis:`«L'intelligenza artificiale è solo un programma: non consuma niente.»`,
+          ask:`Quanto può costare, davvero, una risposta che sembra apparire dal nulla? Guarda e poi dimmelo.`},
+    quiz:[
+      {q:`I calcoli che fanno funzionare l'IA avvengono...`,
+       opts:[`dentro il tuo telefono`,`nei data center: capannoni pieni di server`,`in un unico grande computer al Polo Nord`],
+       correct:1, why:`Avvengono nei <b>data center</b>, spesso a chilometri da te. Il tuo telefono fa solo da finestra.`},
+      {q:`Oltre all'energia, cosa serve spesso per raffreddare i chip dell'IA?`,
+       opts:[`acqua, anche in grandi quantità`,`benzina`,`niente, si raffreddano da soli`],
+       correct:0, why:`Le GPU scaldano molto: il <b>raffreddamento</b> può consumare litri e litri d'acqua.`},
+      {q:`Qual è la fase più "pesante", che avviene prima ancora che tu usi l'IA?`,
+       opts:[`l'accensione dei server`,`l'addestramento del modello`,`l'aggiornamento dell'app`],
+       correct:1, why:`L'<b>addestramento</b> allena il modello per settimane su quantità enormi di dati: lì si concentra gran parte del consumo.`},
+    ],
+    gloss:['g_datacenter','g_gpu','g_raffreddamento','g_addestramento','g_inferenza','g_kwh'],
+    reflect:`Per ogni cosa che chiederesti a un'IA, serve davvero l'IA? Quando, secondo te, vale il consumo nascosto e quando no?`,
+    classnote:`Spunto di classe: fate un elenco di tre cose per cui l'IA "vale la spesa" e tre per cui basterebbe altro (un libro, una domanda a qualcuno, ragionarci su).`
+  },
+  {
+    id:'gps', num:'Stazione 3', titolo:'Come funziona il GPS',
+    src:'https://dl.dropboxusercontent.com/scl/fi/tqjdv86ucfzou9w3nhw6w/gps.mp4?rlkey=09eg6bxnj7te5jhjj3jayxgfh&raw=1',
+    fb:'https://www.dropbox.com/scl/fi/tqjdv86ucfzou9w3nhw6w/gps.mp4?rlkey=09eg6bxnj7te5jhjj3jayxgfh&dl=1',
+    hook:{mis:`«Il telefono dice ai satelliti dove siamo.»`,
+          ask:`E se fosse esattamente il contrario? Guarda con attenzione chi parla e chi ascolta.`},
+    quiz:[
+      {q:`Per calcolare dove sei, il tuo telefono...`,
+       opts:[`trasmette la sua posizione ai satelliti`,`ascolta i segnali dei satelliti e calcola da solo`,`chiama un centralino che lo cerca`],
+       correct:1, why:`Il telefono è un <b>ricevitore</b>: non parla, ascolta. La posizione la calcola lui, a partire dai segnali.`},
+      {q:`Quanti satelliti servono almeno per individuare un punto preciso?`,
+       opts:[`uno`,`tre o quattro`,`almeno cento`],
+       correct:1, why:`Con una sola distanza potresti essere ovunque su una sfera. Con tre o quattro, resta un solo punto: tu.`},
+      {q:`Il metodo che incrocia le distanze da più satelliti si chiama...`,
+       opts:[`trilaterazione`,`sincronizzazione`,`navigazione assistita`],
+       correct:0, why:`Si chiama <b>trilaterazione</b>: si incrociano le distanze finché resta un unico punto compatibile con tutte.`},
+    ],
+    gloss:['g_satellite','g_ricevitore','g_segnale','g_trilaterazione','g_orologio','g_costellazione'],
+    reflect:`Il telefono non "viene trovato": si trova da sé, ascoltando. Cosa cambia, per la tua privacy, sapere chi ascolta e chi trasmette?`,
+    classnote:`Spunto di classe: se il GPS solo ascolta, allora come fa un'app a sapere dove sei? Indagate la differenza tra calcolare la posizione e inviarla a qualcuno.`
+  },
+  {
+    id:'solar', num:'Stazione 4', titolo:'Il Sistema Solare',
+    src:'https://dl.dropboxusercontent.com/scl/fi/gs1xy366osfr5fdm6e0z5/solar_system.mp4?rlkey=p4ltogioaj60anup7gms085xq&raw=1',
+    fb:'https://www.dropbox.com/scl/fi/gs1xy366osfr5fdm6e0z5/solar_system.mp4?rlkey=p4ltogioaj60anup7gms085xq&dl=1',
+    hook:{mis:`«I pianeti stanno fermi nel cielo, come nei disegni.»`,
+          ask:`Cosa li tiene al loro posto, allora? E sono davvero "fermi"? Guarda e ricrediti.`},
+    quiz:[
+      {q:`Cosa tiene i pianeti nelle loro orbite intorno al Sole?`,
+       opts:[`un binario invisibile`,`la gravità del Sole`,`il vento solare`],
+       correct:1, why:`È la <b>gravità</b> del Sole, enorme, a curvare il cammino dei pianeti in orbite stabili.`},
+      {q:`I pianeti vicini al Sole, come la Terra, sono...`,
+       opts:[`piccoli e rocciosi`,`enormi e fatti di gas`,`fatti di ghiaccio`],
+       correct:0, why:`Vicino al Sole stanno i <b>pianeti rocciosi</b>; i giganti gassosi, enormi, stanno più lontano.`},
+      {q:`La luce del Sole impiega ad arrivare fino a noi circa...`,
+       opts:[`un secondo`,`otto minuti`,`un giorno intero`],
+       correct:1, why:`Circa <b>otto minuti</b>. Vuol dire che vedi il Sole com'era otto minuti fa: guardare lontano è guardare nel passato.`},
+    ],
+    gloss:['g_stella','g_gravita','g_orbita','g_roccioso','g_gassoso','g_ua'],
+    reflect:`Se la luce del Sole impiega 8 minuti e quella di certe stelle anni interi: cosa stai guardando davvero, quando alzi gli occhi al cielo di notte?`,
+    classnote:`Spunto di classe: provate a immaginare il Sole come una palla da basket. A quella scala, quanto sarebbe lontana la Terra? E la stella più vicina?`
+  },
+];
+
+/* =======================================================================
+   STATO + DOM
+   ======================================================================= */
+let cur=0;
+const done=[false,false,false,false];
+const notes=['','','',''];          // riflessioni scritte (solo in memoria)
+const qok=[ [false,false,false],[false,false,false],[false,false,false],[false,false,false] ];
+
+const vid=document.getElementById('vid'), vcover=document.getElementById('vcover');
+const stationsEl=document.getElementById('stations'), toastEl=document.getElementById('toast');
+const paneV=document.getElementById('paneVerifica'), paneP=document.getElementById('paneParole'), paneR=document.getElementById('paneRifletti');
+
+const fmt=s=>{s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>toastEl.classList.remove('show'),2200)}
+const CHK='<svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* stazioni */
+TAPPE.forEach((tp,i)=>{
+  const b=document.createElement('button');
+  b.className='station'+(i===0?' active':''); b.dataset.i=i;
+  b.innerHTML=`<span class="st-num"><span>${i+1}</span>${CHK}</span><span class="st-meta"><span class="k">${tp.num}</span><span class="t">${tp.titolo}</span></span>`;
+  stationsEl.appendChild(b);
+});
+stationsEl.addEventListener('click',e=>{const s=e.target.closest('.station');if(s)load(+s.dataset.i)});
+
+/* tabs */
+document.querySelector('.tabs').addEventListener('click',e=>{
+  const t=e.target.closest('.tab'); if(!t)return;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.dataset.p===t.dataset.p));
+});
+
+/* =======================================================================
+   CARICAMENTO STAZIONE
+   ======================================================================= */
+function load(i){
+  cur=i; const tp=TAPPE[i];
+  vid.pause(); vid.src=tp.src; vid.dataset.fb=tp.fb; vid.dataset.tried='0'; vid.load();
+  document.getElementById('ppIco').innerHTML='<path d="M8 5v14l11-7L8 5z" fill="#fff"/>';
+
+  vcover.classList.remove('hide');
+  document.getElementById('covK').textContent=tp.num;
+  document.getElementById('covT').textContent=tp.titolo;
+  document.getElementById('hookMis').textContent=tp.hook.mis;
+  document.getElementById('hookAsk').textContent=tp.hook.ask;
+  document.getElementById('seekFill').style.width='0';document.getElementById('seekKnob').style.left='0';
+  document.getElementById('tNow').textContent='0:00';
+
+  [...stationsEl.children].forEach((c,k)=>c.classList.toggle('active',k===i));
+  renderVerifica(tp,i); renderParole(tp); renderRifletti(tp,i);
+  // torna alla tab verifica
+  document.querySelectorAll('.tab').forEach((x,k)=>x.classList.toggle('on',k===0));
+  document.querySelectorAll('.pane').forEach((p,k)=>p.classList.toggle('on',k===0));
+  updateDots(i); updateProg();
+}
+
+/* ---- VERIFICA ---- */
+function renderVerifica(tp,ti){
+  paneV.innerHTML='';
+  tp.quiz.forEach((item,qi)=>{
+    const wrap=document.createElement('div'); wrap.className='q';
+    let opts='';
+    item.opts.forEach((o,oi)=>{opts+=`<button class="opt" data-q="${qi}" data-o="${oi}">${o}</button>`});
+    wrap.innerHTML=`<div class="q-h"><span class="q-n">${qi+1}</span><span>${item.q}</span></div>${opts}<div class="fb" id="fb-${ti}-${qi}"></div>`;
+    paneV.appendChild(wrap);
+  });
+}
+paneV.addEventListener('click',e=>{
+  const o=e.target.closest('.opt'); if(!o||o.disabled)return;
+  const qi=+o.dataset.q, oi=+o.dataset.o, item=TAPPE[cur].quiz[qi];
+  const fb=document.getElementById(`fb-${cur}-${qi}`);
+  const group=o.parentElement.querySelectorAll('.opt');
+  if(oi===item.correct){
+    group.forEach(b=>{b.disabled=true; b.classList.remove('near')});
+    o.classList.add('ok');
+    fb.className='fb show ok'; fb.innerHTML='<b>Esatto.</b> '+item.why;
+    qok[cur][qi]=true; updateDots(cur);
+  }else{
+    o.classList.add('near'); o.disabled=true;
+    fb.className='fb show near'; fb.innerHTML='<b>Non ancora.</b> Rileggi e riprova: '+hint(item)+'';
+  }
+});
+function hint(item){return `pensa a cosa hai visto nel video, poi scegli di nuovo.`}
+function updateDots(i){
+  const all=qok[i].every(Boolean);
+  document.getElementById('dotV').parentElement.classList.toggle('complete',all);
+}
+
+/* ---- PAROLE ---- */
+function renderParole(tp){
+  paneP.innerHTML='';
+  tp.gloss.forEach(key=>{
+    const g=GLOSS[key]; const c=document.createElement('div'); c.className='term-card';
+    c.innerHTML=`<button class="term-head"><span class="term-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 4h9l3 3v13H6V4z" stroke="#123E90" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12h6M9 15h6" stroke="#123E90" stroke-width="1.6" stroke-linecap="round"/></svg></span>${g.t}<span class="chev"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke="#5C7FC4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><div class="term-def">${g.d}</div>`;
+    paneP.appendChild(c);
+  });
+}
+paneP.addEventListener('click',e=>{const h=e.target.closest('.term-head');if(h)h.parentElement.classList.toggle('open')});
+
+/* ---- RIFLETTI ---- */
+function renderRifletti(tp,ti){
+  paneR.innerHTML=`
+    <div class="reflect-q"><div class="rk">Da pensarci su</div><div class="rt">${tp.reflect}</div></div>
+    <div class="reflect-note"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-4 3v-3H6a2 2 0 0 1-2-2V7z" stroke="#5A687F" stroke-width="1.6"/></svg> Scrivi per te. Niente viene salvato o inviato: lo ritrovi solo nel quaderno finale.</div>
+    <textarea id="ta" placeholder="Le tue parole...">${notes[ti].replace(/</g,'&lt;')}</textarea>
+    <div class="classbox"><div class="ck"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="#123E90" stroke-width="1.6"/><circle cx="17" cy="9" r="2.4" stroke="#123E90" stroke-width="1.6"/><path d="M3 19c0-2.8 2.7-4.5 6-4.5s6 1.7 6 4.5M15.5 19c0-1.8 1.3-3 3.5-3s3.5 1.2 3.5 3" stroke="#123E90" stroke-width="1.6" stroke-linecap="round"/></svg> Per la discussione</div>${tp.classnote}</div>`;
+  const ta=document.getElementById('ta');
+  ta.addEventListener('input',()=>{notes[ti]=ta.value;
+    document.getElementById('dotR').parentElement.classList.toggle('complete',ta.value.trim().length>0);});
+  document.getElementById('dotR').parentElement.classList.toggle('complete',notes[ti].trim().length>0);
+}
+
+/* ---- COMPLETA STAZIONE ---- */
+document.getElementById('doneBtn').addEventListener('click',()=>{
+  done[cur]=true; [...stationsEl.children][cur].classList.add('done'); updateProg();
+  toast('Stazione completata');
+  if(done.every(Boolean)){ openFinal(); return; }
+  const next=done.findIndex(d=>!d); if(next>=0) setTimeout(()=>load(next),450);
+});
+function updateProg(){document.getElementById('prog').textContent=done.filter(Boolean).length+' / 4 stazioni'}
+
+/* =======================================================================
+   PLAYER
+   ======================================================================= */
+const pp=document.getElementById('pp'), seek=document.getElementById('seek');
+const seekFill=document.getElementById('seekFill'), seekKnob=document.getElementById('seekKnob');
+function playPause(){vid.paused?vid.play():vid.pause()}
+pp.addEventListener('click',playPause);
+vcover.addEventListener('click',()=>vid.play());
+vid.addEventListener('play',()=>{vcover.classList.add('hide');
+  document.getElementById('ppIco').innerHTML='<rect x="7" y="5" width="3.5" height="14" rx="1" fill="#fff"/><rect x="13.5" y="5" width="3.5" height="14" rx="1" fill="#fff"/>';});
+vid.addEventListener('pause',()=>{document.getElementById('ppIco').innerHTML='<path d="M8 5v14l11-7L8 5z" fill="#fff"/>'});
+vid.addEventListener('loadedmetadata',()=>{document.getElementById('tDur').textContent=fmt(vid.duration)});
+vid.addEventListener('error',()=>{
+  if(vid.dataset.tried==='0'&&vid.dataset.fb){vid.dataset.tried='1';vid.src=vid.dataset.fb;vid.load();toast('Sorgente alternativa caricata')}
+},true);
+
+let dragging=false;
+function seekTo(x){const r=seek.getBoundingClientRect();const p=Math.max(0,Math.min(1,(x-r.left)/r.width));if(vid.duration)vid.currentTime=p*vid.duration}
+seek.addEventListener('mousedown',e=>{dragging=true;seekTo(e.clientX)});
+window.addEventListener('mousemove',e=>{if(dragging)seekTo(e.clientX)});
+window.addEventListener('mouseup',()=>dragging=false);
+seek.addEventListener('touchstart',e=>seekTo(e.touches[0].clientX),{passive:true});
+seek.addEventListener('touchmove',e=>seekTo(e.touches[0].clientX),{passive:true});
+seek.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')vid.currentTime=Math.min(vid.duration||0,vid.currentTime+5);
+  if(e.key==='ArrowLeft')vid.currentTime=Math.max(0,vid.currentTime-5);
+  if(e.key===' '){e.preventDefault();playPause()}
+});
+function loop(){
+  if(vid.duration){const p=(vid.currentTime/vid.duration)*100;
+    seekFill.style.width=p+'%';seekKnob.style.left=p+'%';
+    document.getElementById('tNow').textContent=fmt(vid.currentTime);}
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* =======================================================================
+   FINALE — quaderno di bordo
+   ======================================================================= */
+function openFinal(){
+  const logs=document.getElementById('logs'); logs.innerHTML='';
+  TAPPE.forEach((tp,i)=>{
+    const d=document.createElement('div'); d.className='log';
+    d.innerHTML=`<div class="lk">${tp.num}</div><h3>${tp.titolo}</h3>
+      <div class="lq">${tp.reflect}</div><div class="la">${(notes[i]||'').replace(/</g,'&lt;')}</div>`;
+    logs.appendChild(d);
+  });
+  document.getElementById('final').classList.add('show');
+}
+document.getElementById('copyLog').addEventListener('click',()=>{
+  let txt='SOTTO IL COFANO — quaderno di bordo\n\n';
+  TAPPE.forEach((tp,i)=>{txt+=`■ ${tp.titolo}\nDomanda: ${tp.reflect}\nNote: ${notes[i]||'(nessuna)'}\n\n`});
+  navigator.clipboard.writeText(txt).then(()=>toast('Quaderno copiato negli appunti'),()=>{
+    const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');toast('Quaderno copiato')}catch(_){toast('Copia non riuscita')}ta.remove();
+  });
+});
+document.getElementById('restart').addEventListener('click',()=>{
+  document.getElementById('final').classList.remove('show');
+  for(let i=0;i<4;i++){done[i]=false;notes[i]='';qok[i]=[false,false,false];[...stationsEl.children][i].classList.remove('done')}
+  load(0);
+});
+
+/* avvio */
+load(0);
+</script>
+</body>
+</html>
