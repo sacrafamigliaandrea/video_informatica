@@ -9,10 +9,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --blu:#123E90;--blu-700:#0E3273;--blu-300:#5C7FC4;--blu-100:#DCE6F8;--blu-050:#EEF3FC;
-  --ambra:#C77A0A;--ambra-bg:#FDF4E6;--verde:#1B7A4B;--verde-bg:#E8F4ED;
-  --ink:#15233F;--ink-soft:#5A687F;--line:#E3E8F2;--bg:#F5F7FB;--card:#FFFFFF;
-  --radius:18px;--radius-sm:12px;--shadow:0 1px 2px rgba(18,62,144,.06),0 8px 24px rgba(18,62,144,.07);--maxw:1320px;
+  /* ---- palette dedicata: QUADRANTE (cobalto + ambra) ---- */
+  --blu:#2746B5;--blu-700:#1C3690;--blu-300:#6E84C9;--blu-100:#DCE3FA;--blu-050:#EEF1FC;
+  --ambra:#B26B0A;--ambra-bg:#FCEFD8;--verde:#1F8A5B;--verde-bg:#E6F4EC;
+  --ink:#13203F;--ink-soft:#586585;--line:#E1E6F4;--bg:#F3F6FC;--card:#FFFFFF;
+  --radius:18px;--radius-sm:12px;--shadow:0 1px 2px rgba(39,70,181,.06),0 8px 24px rgba(39,70,181,.07);--maxw:1320px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
@@ -46,7 +47,7 @@ h1,h2,h3,.dspl{font-family:'Bricolage Grotesque',sans-serif}
 
 /* ====== STAGE ====== */
 .stage{flex:1;display:flex;gap:18px;max-width:var(--maxw);width:100%;margin:0 auto;padding:18px 20px;min-height:0}
-.vcol{flex:1 1 55%;display:flex;flex-direction:column;min-width:0;gap:14px}
+.vcol{flex:0 0 360px;display:flex;flex-direction:column;min-width:0;gap:14px}
 .acol{flex:1 1 45%;display:flex;flex-direction:column;min-width:0;background:var(--card);
   border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
 
@@ -58,8 +59,8 @@ h1,h2,h3,.dspl{font-family:'Bricolage Grotesque',sans-serif}
 .hook .ask{font-size:.86rem;color:var(--ink-soft);line-height:1.45}
 
 /* video */
-.vframe{background:#0A1428;border-radius:var(--radius);overflow:hidden;position:relative;box-shadow:var(--shadow);flex-shrink:0}
-.vframe video{display:block;width:100%;aspect-ratio:16/9;background:#0A1428;object-fit:contain}
+.vframe{background:#0A1428;border-radius:var(--radius);overflow:hidden;position:relative;box-shadow:var(--shadow);flex-shrink:0;width:100%;max-width:360px;aspect-ratio:9/16;max-height:calc(100dvh - 270px);margin:0 auto}
+.vframe video{display:block;width:100%;height:100%;background:#0A1428;object-fit:cover}
 .vcover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
   background:radial-gradient(120% 120% at 50% 30%,#143064 0%,#0A1428 70%);cursor:pointer;text-align:center;padding:24px}
 .vcover.hide{display:none}
@@ -160,6 +161,8 @@ textarea:focus{outline:none;border-color:var(--blu-300)}
   .stage{flex-direction:column;padding:14px;height:auto}
   .vcol,.acol{flex:none;width:100%}
   .acol{min-height:62vh}
+  .vframe{max-width:280px;max-height:64vh}
+  .vbar{max-width:280px;margin:0 auto;width:100%}
   .stations{order:3;width:100%;justify-content:flex-start;overflow-x:auto;padding-bottom:2px}
   .topbar-inner{flex-wrap:wrap}
 }
@@ -192,7 +195,7 @@ textarea:focus{outline:none;border-color:var(--blu-300)}
       <video id="vid" playsinline webkit-playsinline preload="metadata"></video>
       <div class="vcover" id="vcover">
         <div class="ep-k" id="covK">Stazione 1</div>
-        <div class="big-play"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5z" fill="#123E90"/></svg></div>
+        <div class="big-play"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5z" fill="#2746B5"/></svg></div>
         <div class="ep-t" id="covT">—</div>
       </div>
     </div>
@@ -218,7 +221,7 @@ textarea:focus{outline:none;border-color:var(--blu-300)}
       <div class="pane" data-p="rifletti" id="paneRifletti"></div>
     </div>
     <div class="donebar">
-      <span class="prog" id="prog">0 / 4 stazioni</span>
+      <span class="prog" id="prog">0 / 5 stazioni</span>
       <button id="doneBtn">Stazione completata <svg width="16" height="16" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
   </section>
@@ -244,6 +247,12 @@ textarea:focus{outline:none;border-color:var(--blu-300)}
    GLOSSARIO
    ======================================================================= */
 const GLOSS={
+  g_bit:{t:'Bit',d:`La più piccola unità di informazione. Vale soltanto 0 o 1, come un interruttore spento o acceso.`},
+  g_binario:{t:'Sistema binario',d:`Il modo di scrivere i numeri con due sole cifre, 0 e 1. È la lingua madre di ogni computer.`},
+  g_byte:{t:'Byte',d:`Un gruppo di 8 bit. Basta un byte per rappresentare, ad esempio, una lettera dell'alfabeto.`},
+  g_transistor:{t:'Transistor',d:`Minuscolo interruttore dentro il chip: acceso vale 1, spento vale 0. In un processore ce ne sono miliardi.`},
+  g_codifica:{t:'Codifica',d:`Tradurre un'informazione (una lettera, un colore, un suono) in una sequenza di 0 e 1 che il computer sa gestire.`},
+  g_pixel:{t:'Pixel',d:`Il puntino che compone un'immagine sullo schermo. Il suo colore è descritto da numeri: quindi, in fondo, da bit.`},
   g_indice:{t:'Indice',d:`L'archivio già pronto di pagine web che il motore consulta. Come l'indice di un libro: non rilegge tutto, controlla l'elenco.`},
   g_crawler:{t:'Crawler',d:`Programma automatico (detto anche "ragno") che visita le pagine saltando di link in link e ne copia il contenuto per l'indice.`},
   g_query:{t:'Query',d:`La richiesta che scrivi nel motore. Le tue parole diventano una domanda da confrontare con l'indice.`},
@@ -278,7 +287,28 @@ const GLOSS={
    ======================================================================= */
 const TAPPE=[
   {
-    id:'google', num:'Stazione 1', titolo:'Come funziona Google',
+    id:'bit', titolo:'Cos\u2019è un bit',
+    src:'https://dl.dropboxusercontent.com/scl/fi/hz4rx2f43r5myxd805fe2/bit.mp4?rlkey=uvswax89kvztuk77gujf1rwhb&raw=1',
+    fb:'https://www.dropbox.com/scl/fi/hz4rx2f43r5myxd805fe2/bit.mp4?rlkey=uvswax89kvztuk77gujf1rwhb&dl=1',
+    hook:{mis:`«Dentro al computer ci sono davvero le lettere, i colori e i suoni che vedo.»`,
+          ask:`E se là sotto ci fossero soltanto due cose, ripetute miliardi di volte? Guarda e scoprilo.`},
+    quiz:[
+      {q:`Un bit può valere...`,
+       opts:[`qualsiasi numero`,`soltanto 0 oppure 1`,`una lettera dell'alfabeto`],
+       correct:1, why:`Un <b>bit</b> ha due soli stati: 0 o 1, spento o acceso. È il mattone più piccolo dell'informazione.`},
+      {q:`Una foto, una canzone, un testo: dentro al computer sono tutti...`,
+       opts:[`sequenze di 0 e 1`,`piccoli disegni nascosti`,`parole scritte in minuscolo`],
+       correct:0, why:`Tutto viene <b>codificato</b> in lunghe sequenze di 0 e 1. Il computer non "vede" la foto: ne gestisce i numeri.`},
+      {q:`Otto bit messi insieme formano un...`,
+       opts:[`byte`,`pixel`,`megabyte`],
+       correct:0, why:`Otto bit fanno un <b>byte</b>: quanto basta, per esempio, a rappresentare una singola lettera.`},
+    ],
+    gloss:['g_bit','g_binario','g_byte','g_transistor','g_codifica','g_pixel'],
+    reflect:`Se davvero tutto — una foto, una voce, un messaggio — diventa soltanto 0 e 1, dove finisce la "magia" e comincia la matematica?`,
+    classnote:`Spunto di classe: provate a scrivere la prima lettera del vostro nome in binario con una tabella ASCII. Quanti 0 e 1 servono per una sola lettera?`
+  },
+  {
+    id:'google', titolo:'Come funziona Google',
     src:'https://dl.dropboxusercontent.com/scl/fi/i5mq4b985vmom8im0j9kz/google.mp4?rlkey=n1uva4tolxlix0o6p6hty0juz&raw=1',
     fb:'https://www.dropbox.com/scl/fi/i5mq4b985vmom8im0j9kz/google.mp4?rlkey=n1uva4tolxlix0o6p6hty0juz&dl=1',
     hook:{mis:`«Quando cerco qualcosa, Google legge tutta internet in quel momento.»`,
@@ -299,7 +329,7 @@ const TAPPE=[
     classnote:`Spunto di classe: cercate tutti la stessa cosa con parole diverse e confrontate le prime tre risposte. Cosa cambia? Chi decide cosa vedete?`
   },
   {
-    id:'ia', num:'Stazione 2', titolo:'Quanto consuma l\u2019IA',
+    id:'ia', titolo:'Quanto consuma l\u2019IA',
     src:'https://dl.dropboxusercontent.com/scl/fi/86ek9h7g61cbbvla9d0u0/ai_consumo.mp4?rlkey=my9ry8m2yiifzqb2mhj1mjii0&raw=1',
     fb:'https://www.dropbox.com/scl/fi/86ek9h7g61cbbvla9d0u0/ai_consumo.mp4?rlkey=my9ry8m2yiifzqb2mhj1mjii0&dl=1',
     hook:{mis:`«L'intelligenza artificiale è solo un programma: non consuma niente.»`,
@@ -320,7 +350,7 @@ const TAPPE=[
     classnote:`Spunto di classe: fate un elenco di tre cose per cui l'IA "vale la spesa" e tre per cui basterebbe altro (un libro, una domanda a qualcuno, ragionarci su).`
   },
   {
-    id:'gps', num:'Stazione 3', titolo:'Come funziona il GPS',
+    id:'gps', titolo:'Come funziona il GPS',
     src:'https://dl.dropboxusercontent.com/scl/fi/tqjdv86ucfzou9w3nhw6w/gps.mp4?rlkey=09eg6bxnj7te5jhjj3jayxgfh&raw=1',
     fb:'https://www.dropbox.com/scl/fi/tqjdv86ucfzou9w3nhw6w/gps.mp4?rlkey=09eg6bxnj7te5jhjj3jayxgfh&dl=1',
     hook:{mis:`«Il telefono dice ai satelliti dove siamo.»`,
@@ -341,7 +371,7 @@ const TAPPE=[
     classnote:`Spunto di classe: se il GPS solo ascolta, allora come fa un'app a sapere dove sei? Indagate la differenza tra calcolare la posizione e inviarla a qualcuno.`
   },
   {
-    id:'solar', num:'Stazione 4', titolo:'Il Sistema Solare',
+    id:'solar', titolo:'Il Sistema Solare',
     src:'https://dl.dropboxusercontent.com/scl/fi/gs1xy366osfr5fdm6e0z5/solar_system.mp4?rlkey=p4ltogioaj60anup7gms085xq&raw=1',
     fb:'https://www.dropbox.com/scl/fi/gs1xy366osfr5fdm6e0z5/solar_system.mp4?rlkey=p4ltogioaj60anup7gms085xq&dl=1',
     hook:{mis:`«I pianeti stanno fermi nel cielo, come nei disegni.»`,
@@ -367,9 +397,9 @@ const TAPPE=[
    STATO + DOM
    ======================================================================= */
 let cur=0;
-const done=[false,false,false,false];
-const notes=['','','',''];          // riflessioni scritte (solo in memoria)
-const qok=[ [false,false,false],[false,false,false],[false,false,false],[false,false,false] ];
+const done=TAPPE.map(()=>false);
+const notes=TAPPE.map(()=>'');          // riflessioni scritte (solo in memoria)
+const qok=TAPPE.map(tp=>tp.quiz.map(()=>false));
 
 const vid=document.getElementById('vid'), vcover=document.getElementById('vcover');
 const stationsEl=document.getElementById('stations'), toastEl=document.getElementById('toast');
@@ -383,7 +413,7 @@ const CHK='<svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 12l5 5L20
 TAPPE.forEach((tp,i)=>{
   const b=document.createElement('button');
   b.className='station'+(i===0?' active':''); b.dataset.i=i;
-  b.innerHTML=`<span class="st-num"><span>${i+1}</span>${CHK}</span><span class="st-meta"><span class="k">${tp.num}</span><span class="t">${tp.titolo}</span></span>`;
+  b.innerHTML=`<span class="st-num"><span>${i+1}</span>${CHK}</span><span class="st-meta"><span class="k">Stazione ${i+1}</span><span class="t">${tp.titolo}</span></span>`;
   stationsEl.appendChild(b);
 });
 stationsEl.addEventListener('click',e=>{const s=e.target.closest('.station');if(s)load(+s.dataset.i)});
@@ -404,7 +434,7 @@ function load(i){
   document.getElementById('ppIco').innerHTML='<path d="M8 5v14l11-7L8 5z" fill="#fff"/>';
 
   vcover.classList.remove('hide');
-  document.getElementById('covK').textContent=tp.num;
+  document.getElementById('covK').textContent='Stazione '+(i+1);
   document.getElementById('covT').textContent=tp.titolo;
   document.getElementById('hookMis').textContent=tp.hook.mis;
   document.getElementById('hookAsk').textContent=tp.hook.ask;
@@ -456,7 +486,7 @@ function renderParole(tp){
   paneP.innerHTML='';
   tp.gloss.forEach(key=>{
     const g=GLOSS[key]; const c=document.createElement('div'); c.className='term-card';
-    c.innerHTML=`<button class="term-head"><span class="term-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 4h9l3 3v13H6V4z" stroke="#123E90" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12h6M9 15h6" stroke="#123E90" stroke-width="1.6" stroke-linecap="round"/></svg></span>${g.t}<span class="chev"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke="#5C7FC4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><div class="term-def">${g.d}</div>`;
+    c.innerHTML=`<button class="term-head"><span class="term-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 4h9l3 3v13H6V4z" stroke="#2746B5" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12h6M9 15h6" stroke="#2746B5" stroke-width="1.6" stroke-linecap="round"/></svg></span>${g.t}<span class="chev"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke="#6E84C9" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button><div class="term-def">${g.d}</div>`;
     paneP.appendChild(c);
   });
 }
@@ -468,7 +498,7 @@ function renderRifletti(tp,ti){
     <div class="reflect-q"><div class="rk">Da pensarci su</div><div class="rt">${tp.reflect}</div></div>
     <div class="reflect-note"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-4 3v-3H6a2 2 0 0 1-2-2V7z" stroke="#5A687F" stroke-width="1.6"/></svg> Scrivi per te. Niente viene salvato o inviato: lo ritrovi solo nel quaderno finale.</div>
     <textarea id="ta" placeholder="Le tue parole...">${notes[ti].replace(/</g,'&lt;')}</textarea>
-    <div class="classbox"><div class="ck"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="#123E90" stroke-width="1.6"/><circle cx="17" cy="9" r="2.4" stroke="#123E90" stroke-width="1.6"/><path d="M3 19c0-2.8 2.7-4.5 6-4.5s6 1.7 6 4.5M15.5 19c0-1.8 1.3-3 3.5-3s3.5 1.2 3.5 3" stroke="#123E90" stroke-width="1.6" stroke-linecap="round"/></svg> Per la discussione</div>${tp.classnote}</div>`;
+    <div class="classbox"><div class="ck"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="#2746B5" stroke-width="1.6"/><circle cx="17" cy="9" r="2.4" stroke="#2746B5" stroke-width="1.6"/><path d="M3 19c0-2.8 2.7-4.5 6-4.5s6 1.7 6 4.5M15.5 19c0-1.8 1.3-3 3.5-3s3.5 1.2 3.5 3" stroke="#2746B5" stroke-width="1.6" stroke-linecap="round"/></svg> Per la discussione</div>${tp.classnote}</div>`;
   const ta=document.getElementById('ta');
   ta.addEventListener('input',()=>{notes[ti]=ta.value;
     document.getElementById('dotR').parentElement.classList.toggle('complete',ta.value.trim().length>0);});
@@ -482,7 +512,7 @@ document.getElementById('doneBtn').addEventListener('click',()=>{
   if(done.every(Boolean)){ openFinal(); return; }
   const next=done.findIndex(d=>!d); if(next>=0) setTimeout(()=>load(next),450);
 });
-function updateProg(){document.getElementById('prog').textContent=done.filter(Boolean).length+' / 4 stazioni'}
+function updateProg(){document.getElementById('prog').textContent=done.filter(Boolean).length+' / '+TAPPE.length+' stazioni'}
 
 /* =======================================================================
    PLAYER
@@ -527,7 +557,7 @@ function openFinal(){
   const logs=document.getElementById('logs'); logs.innerHTML='';
   TAPPE.forEach((tp,i)=>{
     const d=document.createElement('div'); d.className='log';
-    d.innerHTML=`<div class="lk">${tp.num}</div><h3>${tp.titolo}</h3>
+    d.innerHTML=`<div class="lk">Stazione ${i+1}</div><h3>${tp.titolo}</h3>
       <div class="lq">${tp.reflect}</div><div class="la">${(notes[i]||'').replace(/</g,'&lt;')}</div>`;
     logs.appendChild(d);
   });
@@ -543,7 +573,7 @@ document.getElementById('copyLog').addEventListener('click',()=>{
 });
 document.getElementById('restart').addEventListener('click',()=>{
   document.getElementById('final').classList.remove('show');
-  for(let i=0;i<4;i++){done[i]=false;notes[i]='';qok[i]=[false,false,false];[...stationsEl.children][i].classList.remove('done')}
+  for(let i=0;i<TAPPE.length;i++){done[i]=false;notes[i]='';qok[i]=TAPPE[i].quiz.map(()=>false);[...stationsEl.children][i].classList.remove('done')}
   load(0);
 });
 
