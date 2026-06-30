@@ -254,6 +254,12 @@ textarea:focus{outline:none;border-color:var(--blu-300)}
    GLOSSARIO
    ======================================================================= */
 const GLOSS={
+  g_malware:{t:'Malware',d:`Software malevolo: nome generale per qualsiasi programma creato apposta per danneggiare un dispositivo, spiare o rubare dati.`},
+  g_virus:{t:'Virus',d:`Un tipo di malware che si nasconde dentro un file o un programma e si replica, infettando altri file quando vengono aperti o condivisi.`},
+  g_trojan:{t:'Trojan',d:`Malware travestito da programma utile: una volta aperto apre la porta ad altri attacchi. Il nome viene dal cavallo di Troia.`},
+  g_worm:{t:'Worm',d:`Malware che si diffonde da solo da un dispositivo all'altro attraverso la rete, senza che nessuno apra un file.`},
+  g_ransomware:{t:'Ransomware',d:`Malware che blocca o cifra i file e chiede un riscatto (in inglese \u00abransom\u00bb) per restituirli.`},
+  g_antivirus:{t:'Antivirus',d:`Programma che riconosce, blocca e rimuove i malware, tenendo d'occhio file e attivit\u00e0 sospette.`},
   g_bit:{t:'Bit',d:`La più piccola unità di informazione. Vale soltanto 0 o 1, come un interruttore spento o acceso.`},
   g_binario:{t:'Sistema binario',d:`Il modo di scrivere i numeri con due sole cifre, 0 e 1. È la lingua madre di ogni computer.`},
   g_byte:{t:'Byte',d:`Un gruppo di 8 bit. Basta un byte per rappresentare, ad esempio, una lettera dell'alfabeto.`},
@@ -554,19 +560,19 @@ const TAPPE=[
     classnote:`Spunto di classe: guardate in alto sullo schermo. Quando compare il simbolo Wi-Fi e quando "4G/5G"? Cosa cambia fuori e dentro la scuola?`
   },
   {
-    id:'site', titolo:'Il sito web',
+    id:'site', titolo:'Virus e malware',
     src:'https://dl.dropboxusercontent.com/scl/fi/vad4u83r7iz3j49lm9acn/site.mp4?rlkey=4bdiizmg54drbye6k4qp2wq8y&raw=1',
     fb:'https://www.dropbox.com/scl/fi/vad4u83r7iz3j49lm9acn/site.mp4?rlkey=4bdiizmg54drbye6k4qp2wq8y&dl=1',
-    hook:{mis:`«Un sito e una pagina sono la stessa cosa.»`,
-          ask:`Una è il mattone, l'altro è la casa intera. Guarda come stanno insieme.`},
+    hook:{mis:`«Virus e malware sono la stessa cosa: ogni attacco è un "virus".»`,
+          ask:`Uno è la grande famiglia, l'altro un solo parente. Guarda chi sta dentro chi.`},
     quiz:[
-      {q:`Un sito web è...`,opts:[`una sola pagina`,`un insieme di pagine collegate sotto lo stesso dominio`,`un'app da installare`],correct:1,why:`Il <b>sito</b> è fatto di più <b>pagine</b> collegate tra loro.`},
-      {q:`La porta d'ingresso principale di un sito è la...`,opts:[`homepage`,`password`,`casella di posta`],correct:0,why:`La <b>homepage</b> è la pagina da cui di solito si parte.`},
-      {q:`Perché un sito sia raggiungibile da tutti, i suoi file stanno...`,opts:[`solo sul computer di chi l'ha fatto`,`su un hosting, un server sempre acceso`,`dentro il router di casa`],correct:1,why:`L'<b>hosting</b> tiene i file online giorno e notte.`},
+      {q:`La parola «malware» indica...`,opts:[`un solo virus molto famoso`,`qualsiasi software creato per fare danni: la categoria generale`,`un programma antivirus`],correct:1,why:`<b>Malware</b> vuol dire «software malevolo»: è l'insieme di tutti i programmi nati per danneggiare, spiare o rubare.`},
+      {q:`Che rapporto c'è tra virus e malware?`,opts:[`sono due nomi per la stessa identica cosa`,`il virus è un tipo di malware`,`il malware è un tipo di virus`],correct:1,why:`Ogni <b>virus</b> è un <b>malware</b>, ma non ogni malware è un virus: il virus è solo una delle tante famiglie.`},
+      {q:`Cosa rende un programma un «virus» in senso stretto?`,opts:[`si nasconde in un file e si replica diffondendosi`,`rallenta soltanto il computer`,`serve a mostrare pubblicità`],correct:0,why:`Il <b>virus</b> si attacca a un file o programma e si copia, infettando altri file quando vengono aperti o condivisi — come un virus biologico.`},
     ],
-    gloss:['g_sito','g_homepage','g_pagina','g_hosting','g_dominio','g_url'],
-    reflect:`Se i file di un sito vivono sul server di qualcun altro, cosa succede al sito se quel server si spegne?`,
-    classnote:`Spunto di classe: disegnate la mappa di un piccolo sito scolastico. Quale pagina è la homepage e quali pagine sono collegate?`
+    gloss:['g_malware','g_virus','g_trojan','g_worm','g_ransomware','g_antivirus'],
+    reflect:`Se «virus» è solo uno dei tanti tipi di malware, perché nel linguaggio di tutti i giorni chiamiamo «virus» quasi ogni problema del computer?`,
+    classnote:`Spunto di classe: costruite uno schema a insiemi — il cerchio grande «malware» e dentro i cerchietti virus, trojan, worm, ransomware. Dove mettereste uno spyware che spia di nascosto?`
   },
   {
     id:'api', titolo:'API e SDK',
